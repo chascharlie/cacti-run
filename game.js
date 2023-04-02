@@ -18,7 +18,6 @@ kaboom({
 });
 
 loadRoot("https://i.ibb.co/"); // ImgBB server as root directory for graphics
-
 // Kaboom appears to have some issues with getting graphics from local storage
 // Load graphics for floor, obstacle, and player as sprites
 loadSprite("floor", "4jMbFVt/sand.png");
@@ -32,10 +31,11 @@ loadSpriteAtlas("9pskdx9/creeper.png", {
         sliceX: 1,
         sliceY: 2,
         anims: {
-            move: { from: 0, to: 1, speed: 4, loop: true }
+            move: { from: 0, to: 1, speed: 7, loop: true }
         }
     }
 });
+loadFont("VT323", "ZdsBMqw/VT323.png", 10, 20);
 
 // Main scene; this will be the game itself
 scene("main", () => {
@@ -51,7 +51,8 @@ scene("main", () => {
 
     const score = add([
         text("Score: 0", {
-            size: 25
+            size: 25,
+            font: "VT323"
         }),
         pos(0, 0),
         color(255, 255, 255),
@@ -135,7 +136,8 @@ scene("game-over", (score) => {
     add([
         text("Game Over\nYour score was "+score+"\nPress any key to play again", {
             size: 35,
-            width: WIDTH
+            width: WIDTH,
+            font: "VT323"
         }),
         pos(center()),
         origin("center"),
