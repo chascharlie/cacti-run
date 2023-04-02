@@ -6,6 +6,10 @@ const HEIGHT = window.innerHeight;
 const NUMBER_OF_COLS = Math.round(WIDTH / 32);
 const NUMBER_OF_ROWS = Math.round(HEIGHT / 32);
 
+// Move and jump speed
+const MOVE_SPEED = 200
+const JUMP_SPEED = 500
+
 // Initialise Kaboom. with width and height and a plain white background
 kaboom({
     width: WIDTH,
@@ -86,21 +90,21 @@ scene("main", () => {
         }
     });
     
-    onUpdate("obstacle", (obstacle) => { // Update "obstacle" every frame
-        obstacle.move(-200, 0); // Move to the left at speed of 200/s
+    onUpdate("obstacle", (obstacle) => { // Update each obstacles every frame
+        obstacle.move(-MOVE_SPEED, 0); // Move obstacle to the left at constant speed
         if (obstacle.pos.x < -32) { // Player has avoided the obstacle
             score.value++; // Increment score
             score.text = "Score: " + score.value; // Update score text
             destroy(obstacle); // Stop counting any further to score
         }
     });
-    
-    onKeyPress("space", () => { // When the space key is pressed
-        player.jump(500); // Jump at speed 500/s
+
+    onKeyPress("space", () => { // Space key pressed
+        player.jump(JUMP_SPEED); // Jump at constant speed
     });
 
-    onClick(() => { // When mouse is clicked
-        player.jump(500);
+    onTouchStart(() => { // Screen touched on a touchscreen device
+        player.jump(JUMP_SPEED);
     });
 
     player.collides("obstacle", () => { // When player collides with any obstacle
@@ -109,14 +113,15 @@ scene("main", () => {
         setTimeout(() => {
             go("game-over", score.value);
         }, 500);
-    })
+    });
 });
 
 // Game Over scene; this will appear when the player collides with an obstacle
 scene("game-over", (score) => {
     add([
         text("Game Over\nYour score was "+score+"\nPress any key to play again", {
-            size: 35
+            size: 35,
+            width: WIDTH
         }),
         pos(center()),
         origin("center"),
@@ -125,6 +130,10 @@ scene("game-over", (score) => {
 
     onKeyPress(() => { // Any key pressed
         go("main"); // Go to Main scene
+    });
+
+    onTouchStart(() => {
+        go("main");
     });
 });
 
