@@ -99,6 +99,10 @@ scene("main", () => {
         player.jump(500); // Jump at speed 500/s
     });
 
+    onClick(() => { // When mouse is clicked
+        player.jump(500);
+    });
+
     player.collides("obstacle", () => { // When player collides with any obstacle
         shake(10); // Shake camera mildly
         // Wait half a second before switching to Game Over scene
