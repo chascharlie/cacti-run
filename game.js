@@ -35,7 +35,100 @@ loadSpriteAtlas("9pskdx9/creeper.png", {
         }
     }
 });
+loadSpriteAtlas("1sGDFdH/buttons.png", {
+    button: {
+        x: 0,
+        y: 0,
+        width: 300,
+        height: 166,
+        sliceX: 1,
+        sliceY: 2,
+        anims: {
+            default: 0,
+            selected: 1
+        }
+    }
+});
 loadFont("VT323", "ZdsBMqw/VT323.png", 10, 20);
+
+// Generate map based on width and height of page
+var map = [];
+    
+for (let y = 0; y < NUMBER_OF_ROWS; y++) { // Loop y from 0 to NUMBER_OF_ROWS
+    let row = ""; // Start row as an empty string
+
+    for (let x = 0; x < NUMBER_OF_COLS; x++) { // Loop x from 0 to NUMBER_OF_COLS
+        if (y == NUMBER_OF_ROWS-1) { // The final row will be the floor
+            row += "F"; // Add 'F' for Kaboom to parse later on
+        } else { // Otherwise
+            row += " "; // Add empty space; this will be ignored
+        }
+    }
+
+    map.push(row); // Push row to map
+}
+
+// Configuration of map
+const config =  {
+    width: 64,
+    height: 64,
+    "F": () => [
+        sprite("floor"),
+        area(),
+        solid()
+    ] // Spawn the floor sprite every occurance of F
+}
+
+// Title scene; this will be the initial scene of the game
+scene("title", () => {
+    add([
+        text("Obstacle Jump", {
+            size: 50,
+            font: "VT323"
+        }),
+        area(),
+        origin("center"),
+        pos(center().x, 40),
+        color(255, 255, 255)
+    ]); // Setup title text at the top middle of the screen
+
+    const playButton = add([
+        sprite("button"),
+        area(),
+        origin("center"),
+        pos(center()),
+        "button"
+    ]); // Setup button to start game in the centre of the screen
+
+    add([
+        text("Play", {
+            size: 30,
+            font: "VT323"
+        }),
+        area(),
+        origin("center"),
+        pos(center()),
+        color(255, 255, 255)
+    ]) // Setup text "play" to the middle of button
+
+    addLevel(map, config); // Map as background
+
+    onHover("button", (button) => { // Mouse hovers over any button
+        button.play("selected"); // Change texture to selected
+    }, (button) => { // Mouse no longer hovering
+        button.play("default"); // Revert texture to default
+    });
+
+    onTouchStart(() => {
+        playButton.onHover(() => {
+            go("main");
+        });
+    });
+
+    playButton.onClick(() => { // Play button clicked
+        go("main"); // Start game
+    });
+});
 
 // Main scene; this will be the game itself
 scene("main", () => {
@@ -59,32 +152,7 @@ scene("main", () => {
         { value: 0 }
     ]) // Setup score text
 
-    // Generate map based on width and height of page
-    var map = [];
-    
-    for (let y = 0; y < NUMBER_OF_ROWS; y++) { // Loop y from 0 to NUMBER_OF_ROWS
-        let row = ""; // Start row as an empty string
-    
-        for (let x = 0; x < NUMBER_OF_COLS; x++) { // Loop x from 0 to NUMBER_OF_COLS
-            if (y == NUMBER_OF_ROWS-1) { // The final row will be the floor
-                row += "F"; // Add 'F' for Kaboom to parse later on
-            } else { // Otherwise
-                row += " "; // Add empty space; this will be ignored
-            }
-        }
-    
-        map.push(row); // Push row to map
-    }
-    
-    addLevel(map, {
-        width: 64,
-        height: 64,
-        "F": () => [
-            sprite("floor"),
-            area(),
-            solid()
-        ] // Spawn the floor sprite for F on the map
-    });
+    addLevel(map,config);
     
     let lastObstacle = 0; // Define lastObstacle; this will be used to avoid multiple obstacles appearing next to one another
     
@@ -134,23 +202,50 @@ scene("main", () => {
 // Game Over scene; this will appear when the player collides with an obstacle
 scene("game-over", (score) => {
     add([
-        text("Game Over\nYour score was "+score+"\nPress any key to play again", {
+        text("Game Over\nYour score was "+score, {
             size: 35,
             width: WIDTH,
             font: "VT323"
         }),
-        pos(center()),
+        pos(center().x, center().y-100),
         origin("center"),
         color(255, 255, 255)
     ]); // Setup three lines of text informing game is over, the score, and to press any key to restart
 
-    onKeyPress(() => { // Any key pressed
-        go("main"); // Go to Main scene
+    const respawnButton = add([
+        sprite("button"),
+        area(),
+        origin("center"),
+        pos(center()),
+        "button"
+    ]);
+
+    add([
+        text("Respawn", {
+            size: 30,
+            font: "VT323"
+        }),
+        area(),
+        origin("center"),
+        pos(center()),
+        color(255, 255, 255)
+    ])
+
+    onHover("button", (button) => {
+        button.play("selected");
+    }, (button) => {
+        button.play("default");
     });
 
     onTouchStart(() => {
+        respawnButton.onHover(() => {
+            go("main");
+        });
+    });
+
+    respawnButton.onClick(() => {
         go("main");
     });
 });
 
-go("main");
+go("title");
