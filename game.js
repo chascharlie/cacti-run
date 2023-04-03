@@ -183,11 +183,15 @@ scene("main", () => {
     });
 
     onKeyPress("space", () => { // Space key pressed
-        player.jump(JUMP_SPEED); // Jump at constant speed
+        if (player.isGrounded()) { // Player not already jumping
+            player.jump(JUMP_SPEED); // Jump at constant speed
+        }
     });
 
     onTouchStart(() => { // Screen touched on a touchscreen device
-        player.jump(JUMP_SPEED);
+        if (player.isGrounded()) {
+            player.jump(JUMP_SPEED);
+        }
     });
 
     player.collides("obstacle", () => { // When player collides with any obstacle
