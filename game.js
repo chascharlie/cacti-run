@@ -22,6 +22,7 @@ loadRoot("https://i.ibb.co/"); // ImgBB server as root directory for graphics
 // Load graphics for floor, obstacle, and player as sprites
 loadSprite("floor", "4jMbFVt/sand.png");
 loadSprite("obstacle", "CsDYk5S/cactus.png");
+loadSprite("sun", "WvPgYqk/sun.png");
 loadSpriteAtlas("9pskdx9/creeper.png", {
     player: {
         x: 0,
@@ -79,8 +80,22 @@ const config =  {
     ] // Spawn the floor sprite every occurance of F
 }
 
+// Setup function; this can be called every scene for mutual graphics
+function setup() {
+    add([
+        sprite("sun"),
+        area(),
+        pos(WIDTH-80, 80),
+        origin("center")
+    ]); // Setup sun sprite in the top right of the screen
+
+    addLevel(map, config); // Map as background
+}
+
 // Title scene; this will be the initial scene of the game
 scene("title", () => {
+    setup();
+
     add([
         text("Obstacle Jump", {
             size: 50,
@@ -111,8 +126,6 @@ scene("title", () => {
         color(255, 255, 255)
     ]) // Setup text "play" to the middle of button
 
-    addLevel(map, config); // Map as background
-
     onHover("button", (button) => { // Mouse hovers over any button
         button.play("selected"); // Change texture to selected
     }, (button) => { // Mouse no longer hovering
@@ -132,6 +145,8 @@ scene("title", () => {
 
 // Main scene; this will be the game itself
 scene("main", () => {
+    setup();
+
     const player = add([
         sprite("player"),
         area(),
@@ -151,8 +166,6 @@ scene("main", () => {
         color(255, 255, 255),
         { value: 0 }
     ]) // Setup score text
-
-    addLevel(map,config);
     
     let lastObstacle = 0; // Define lastObstacle; this will be used to avoid multiple obstacles appearing next to one another
     
@@ -205,6 +218,8 @@ scene("main", () => {
 
 // Game Over scene; this will appear when the player collides with an obstacle
 scene("game-over", (score) => {
+    setup();
+
     add([
         text("Game Over\nYour score was "+score, {
             size: 35,
