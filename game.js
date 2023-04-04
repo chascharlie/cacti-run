@@ -36,12 +36,12 @@ loadSpriteAtlas("9pskdx9/creeper.png", {
         }
     }
 });
-loadSpriteAtlas("1sGDFdH/buttons.png", {
+loadSpriteAtlas("HB1sD0r/button.png", {
     button: {
         x: 0,
         y: 0,
-        width: 300,
-        height: 166,
+        width: 130,
+        height: 80,
         sliceX: 1,
         sliceY: 2,
         anims: {
@@ -117,7 +117,7 @@ scene("title", () => {
 
     add([
         text("Play", {
-            size: 30,
+            size: 25,
             font: "VT323"
         }),
         area(),
@@ -226,7 +226,7 @@ scene("game-over", (score) => {
             width: WIDTH,
             font: "VT323"
         }),
-        pos(center().x, center().y-100),
+        pos(center().x, center().y-70),
         origin("center"),
         color(255, 255, 255)
     ]); // Setup three lines of text informing game is over, the score, and to press any key to restart
@@ -241,7 +241,7 @@ scene("game-over", (score) => {
 
     add([
         text("Respawn", {
-            size: 30,
+            size: 25,
             font: "VT323"
         }),
         area(),
