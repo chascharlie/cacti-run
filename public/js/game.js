@@ -111,7 +111,7 @@ scene("title", () => {
         sprite("button"),
         area(),
         origin("center"),
-        pos(center()),
+        pos(center().x, center().y-22),
         "button"
     ]); // Setup button to start game in the centre of the screen
 
@@ -122,9 +122,53 @@ scene("title", () => {
         }),
         area(),
         origin("center"),
-        pos(center()),
+        pos(center().x, center().y-22),
         color(255, 255, 255)
-    ]) // Setup text "play" to the middle of button
+    ]); // Setup text "play" to the middle of button
+
+    const loginButton = add([
+        sprite("button"),
+        area(),
+        origin("center"),
+        pos(center().x, center().y+22),
+        "button",
+        { signed_in: (username !== "Guest") } // This attribute will be set to true if username is NOT "Guest" and false if it is
+    ]); // Setup login button
+
+    if (loginButton.signed_in) { // If signed in
+        add([
+            text("Sign Out", {
+                size: 25,
+                font: "VT323"
+            }),
+            area(),
+            origin("center"),
+            pos(center().x, center().y+22),
+            color(255, 255, 255)
+        ]); // Setup "sign out" text
+
+        add([
+            text(`Signed in as: ${username}`, {
+                size: 20,
+                font: "VT323"
+            }),
+            area(),
+            origin("center"),
+            pos(center().x, center().y+65),
+            color(255, 255, 255)
+        ]); // Setup text showing the username of the account
+    } else {
+        add([
+            text("Sign In", {
+                size: 25,
+                font: "VT323"
+            }),
+            area(),
+            origin("center"),
+            pos(center().x, center().y+22),
+            color(255, 255, 255)
+        ]); // Setup "sign in" text
+    }
 
     onHover("button", (button) => { // Mouse hovers over any button
         button.play("selected"); // Change texture to selected
@@ -132,14 +176,39 @@ scene("title", () => {
         button.play("default"); // Revert texture to default
     });
 
-    onTouchStart(() => {
-        playButton.onHover(() => {
-            go("main");
+    onTouchStart(() => { // When using touchscreen
+        playButton.onHover(() => { // Kaboom.js counts tapping as hovering on touchscreen
+            go("main"); // Start game
+        });
+        loginButton.onHover(() => {
+            if (loginButton.signed_in) {
+                $.post({
+                    url: "/logout",
+                    success: () => {
+                        location.reload();
+                    }
+                }); // Send POST logout request, and if successful, reload the page
+            } else {
+                location.href = "login.html"; // Go to login page
+            }
         });
     });
 
     playButton.onClick(() => { // Play button clicked
         go("main"); // Start game
+    });
+
+    loginButton.onClick(() => {
+        if (loginButton.signed_in) {
+            $.post({
+                url: "/logout",
+                success: () => {
+                    location.reload();
+                }
+            })
+        } else {
+            location.href = "login.html";
+        }
     });
 });
 

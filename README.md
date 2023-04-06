@@ -10,9 +10,9 @@
 * Touchscreen support 🟢
 * Minecraft textures 🟢
 * Creeper walking animation 🟢
-* Title and respawn screens 🟢 
+* Title and respawn screens 🟢
+* Account registration/login system 🟢
 * Leaderboard 🟡
-* Account registration/login system 🟡
 * Level system 🟡
 * Custom skins 🟡
 
@@ -26,6 +26,25 @@
 * On mobile, tap the screen to jump
 
 Movement of the player forward is accomplished by scrolling. You are not actually moving to the right; the cacti are moving to the left.
+
+# Changelog
+
+## 6th April 2023
+
+* Account login/registration system based on my other project, <a href="https://github.com/chascharlie/node-login-new">node-login-new</a>
+* No longer available on GitHub pages due to use of Node.js
+
+## 3rd April 2023
+
+* Buttons on title and respawn screen
+* Player can only jump when on the ground, no longer able to "fly" over obstacles
+* Added the sun
+
+## 2nd April 2023
+
+* Touchscreen support
+* Minecraft textures
+* VT323 font
 
 # Screenshots
 

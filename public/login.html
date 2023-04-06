@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign In</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <section>
+            <div class="form-wrap">
+                <div class="tab-selector">
+                    <button type="button" class="tab login selected">SIGN IN</button>
+                    <button type="button" class="tab register">SIGN UP</button>
+                </div>
+                <form class="login-form">
+                    <div class="input-wrap">
+                        <input type="text" class="form-input login username" placeholder="Username" required>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="password" class="form-input login password" placeholder="Password" required>
+                    </div>
+                    <input type="submit" class="btn-form" value="SIGN IN">
+                </form>
+                <form class="register-form" hidden>
+                    <div class="input-wrap">
+                        <input type="text" class="form-input register username" placeholder="Username" minlength=3 required>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="password" class="form-input register password" placeholder="Password" minlength="8" required>
+                    </div>
+                    
+                    <p class="form-text"><input type="checkbox" required> I agree to the Terms of Service and Privacy Policy</p>
+                    <input type="submit" class="btn-form" value="SIGN UP">
+                </form>
+            </div>
+        </section>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="js/login.js"></script>
+    </body>
+</html>
