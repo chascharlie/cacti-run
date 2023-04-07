@@ -10,23 +10,23 @@ const NUMBER_OF_ROWS = Math.round(HEIGHT / 64)
 kaboom({
     width: WIDTH, // Set the width of the game window
     height: HEIGHT, // Set the height of the game window
-    background: [127, 169, 255] // Set the background color of the game to light blue
+    background: [180, 210, 246] // Set the background color of the game to light blue
 })
 
 loadRoot("https://i.ibb.co/")  // Set the root URL for all asset loading
-loadSprite("floor", "4jMbFVt/sand.png")  // Load the floor sprite
-loadSprite("obstacle", "CsDYk5S/cactus.png")
-loadSprite("sun", "WvPgYqk/sun.png")
-loadSpriteAtlas("9pskdx9/creeper.png", { // Load the player sprite atlas
+loadSprite("floor", "DKK28Xh/sand.png")  // Load the floor sprite
+loadSprite("obstacle", "f9HPp8H/cactus.png")
+loadSprite("sun", "r3J0fH4/sun.png")
+loadSpriteAtlas("mCjLYRH/player.png", {
     player: {
         x: 0,
         y: 0,
-        width: 80,
-        height: 265,
-        sliceX: 1,
-        sliceY: 2,
+        width: 280,
+        height: 99,
+        sliceX: 4,
+        sliceY: 1,
         anims: {
-            move: { from: 0, to: 1, speed: 7, loop: true } // Set properties for the "move" animation
+            moving: {from: 0, to: 3, loop: true, speed: 7}
         }
     }
 })
@@ -77,6 +77,13 @@ scene("title", () => {
     // Add level with map and config
     addLevel(map, config)
 
+    add([
+        sprite("sun"),
+        area(),
+        pos(WIDTH-80, 80),
+        origin("center")
+    ])
+    
     // Display game title
     add([
         text("Obstacle Jump", {
@@ -206,15 +213,23 @@ scene("title", () => {
 scene("main", () => {
     addLevel(map, config)
 
+    add([
+        sprite("sun"),
+        area(),
+        pos(WIDTH-80, 80),
+        origin("center")
+    ])
+
     // Create the player sprite
     const player = add([
         sprite("player"),
         area(),
-        pos(0, HEIGHT-192),
+        pos(20, HEIGHT-192),
         body(),
         solid()
     ])
-    player.play("move") // Play the "move" animation for player
+
+    player.play("moving")
 
     // Display score text
     let score = add([
@@ -229,7 +244,7 @@ scene("main", () => {
 
     var obstacleFrequency = 1.5 // Frequency in seconds at which a new obstacle is generated
     var moveSpeed = 300 // Speed at which obstacles move toward the player
-    var jumpSpeed = 800 // Speed at which the player jumps
+    var jumpSpeed = 700 // Speed at which the player jumps
 
     // Function to spawn obstacles at a specific frequency
     function spawnObstacles() {
@@ -290,6 +305,13 @@ scene("main", () => {
 // Game Over scene taking in score as parameter
 scene("game-over", (score) => {
     addLevel(map, config)
+
+    add([
+        sprite("sun"),
+        area(),
+        pos(WIDTH-80, 80),
+        origin("center")
+    ])
 
     // Display the "Game Over" text with the player's score
     add([
