@@ -1,36 +1,36 @@
-// Import required modules
-const http = require('http');
-const express = require('express');
-const cookieParser = require('cookie-parser');
+// Require modules
+const express = require('express')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const account = require('./lib/account')
 
-// Account functionality
-const account = require('./lib/account');
+const app = express() // Create Express app
+app.use(bodyParser.urlencoded({ extended: true })) // Use middleware to parse request body
+app.use(express.static(__dirname + "/public")) // Serve static files from public directory
+app.use(cookieParser()) // Use cookie-parser middleware to handle cookies
 
-const app = express(); // Create Express application
-app.use(express.static(__dirname + "/public")); // Serve static files in /public directory
-app.use(cookieParser()); // Enable cookie parsing
 
-// On connection to root
+// Define route for root
 app.get('/', (req, res) => {
-    const session = req.cookies.session; // Get session from cookie
+    let session = req.cookies.session // Get session from cookies
+    var username
 
-    var username;
-
-    if (session) { // Session is defined
-        // Get user information from account
-        account.getInfo(session, (err, data) => {
-            if (data) { // Info found
-                username = data.username; // Set username to that retrieved
+    // If session is a value, try to find the corresponding username in database
+    if (session) {
+        account.getDetails(session, (err, details) => {
+            if (err) {
+                username = "Guest"
             } else {
-                username = "Guest"; // Set username to Guest
+                username = details.username
             }
-        });
-    } else { // No session
-        username = "Guest";
+        })
+    } else { // If session is undefined, user is a guest
+        username = "Guest"
     }
 
-    function waitForInfo() { // Recursion function to avoid username being undefined
-        if (username) { // Username has a value
+    // Wait for username to be available and send response
+    (function waitForUsername() {
+        if (username) {
             res.send(`
             <!DOCTYPE html>
             <html>
@@ -38,60 +38,70 @@ app.get('/', (req, res) => {
                     <meta charset="utf-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <title>Obstacle Jump</title>
-                    <link rel="stylesheet" href="styles.css">
                 </head>
                 <body>
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
                     <script src="https://unpkg.com/kaboom@2000.2.10/dist/kaboom.js"></script>
-                    <script>
-                        const username = "${username}";
-                    </script>
                     <script src="js/game.js"></script>
-
+                    <script>
+                        const username = "${username}"
+                    </script>
                 </body>
             </html>
-            `); // Send HTML to client including constant value of username
-            res.end('');
-        } else { // Username undefined
-            setTimeout(waitForInfo, 10); // Repeat in 10 milliseconds
+            `)
+        } else {
+            setTimeout(waitForUsername, 10) // Wait for 10 milliseconds and check again
         }
-    }
+    })()
+})
 
-    waitForInfo();
-});
-
-// POST request register; run upon submission of registration form
-app.post('/register', express.urlencoded({ extended: true }), (req, res) => {
-    account.register(req.body, (err) => { // Pass body of request (containing username and password) to register function
-        if (err) { // Unsuccessful
-            res.status(err); // Send error code
-        }
-        res.end(''); // End response
-    })
-});
-
-// POST request login; run upon submission of login form
-app.post('/login', express.urlencoded({ extended: true }), (req, res) => {
+// POST route for /login
+app.post('/login', (req, res) => {
+    // Call the login function, passing in the request body
     account.login(req.body, (err, session) => {
-        if (session) { // Successful
-            res.cookie('session', session); // Store session as cookie on client
-        } else { // Unsuccessful
-            res.status(err);
+        // If an error occurred during login, set the response status to the error code and send the error message
+        if (err) {
+            res.status(err.code).send(err.msg)
+            return
         }
-        res.end('');
-    });
-});
 
-// POST request logout
-app.post('/logout', express.urlencoded({ extended: true }), (req, res) => {
-    const session = req.cookies.session;
-    account.logout(session);
+        // If login was successful, set a cookie with the session ID and a max age of 1 year (in seconds)
+        res.cookie('session', session, {
+            maxAge: 60 * 60 * 24 * 7 * 52,
+            httpOnly: true
+        })
 
-    res.clearCookie('session'); // Clear cookie of session
-    res.end('');
-});
+        // End the response with the session ID as the body
+        res.redirect('/')
+    })
+})
 
-const server = http.createServer(app); // Create server running app
-server.listen(8080, () => {
-    console.log("Server is running!");
-}); // Run on port 8080
+// POST route for /register
+app.post('/register', (req, res) => {
+    // Call the register function, passing in the request body
+    account.register(req.body, (err) => {
+        // If an error occurred during registration, set the response status to the error code and send the error message
+        if (err) {
+            res.status(err.code).send(err.msg)
+            return
+        }
+
+        res.redirect('back') // If registration was successful, refresh the page
+    })
+})
+
+// POST route for /logout
+app.post('/logout', (req, res) => {
+    let session = req.cookies.session
+
+    // Call the logout function, passing in the session
+    account.logout(session, () => {
+        res.clearCookie("session") // Delete cookie
+        res.end('')
+    })
+})
+
+// This starts the server listening on port 8080 and logs a message to the console when the server is running
+app.listen(8080, () => {
+    console.log("Server running!")
+})

@@ -1,4 +1,4 @@
-# Description!
+# Description
 
 <img src="https://user-images.githubusercontent.com/123321721/230342944-5eb8a0cb-909b-43b2-955d-968aaddc49f8.png" style="width: 100%">
 
@@ -12,8 +12,8 @@
 * Creeper walking animation 🟢
 * Title and respawn screens 🟢
 * Account registration/login system 🟢
+* Get harder on progression 🟢
 * Leaderboard 🟡
-* Level system 🟡
 * Custom skins 🟡
 
 🟢 = Working | 🟡 = Planned for future
@@ -28,6 +28,13 @@
 Movement of the player forward is accomplished by scrolling. You are not actually moving to the right; the cacti are moving to the left.
 
 # Changelog
+
+## 7th April 2023
+
+* Complete rewrite of backend
+* Passwords hashed by bcrypt instead of SHA256
+* Harder on progression; gameplay becomes faster every 15 points
+* Floor sprites fill the entire bottom of the screen
 
 ## 6th April 2023
 
