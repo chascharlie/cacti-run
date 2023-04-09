@@ -2,7 +2,7 @@
 
 <img src="https://i.ibb.co/jyvkCDL/Screenshot-from-2023-04-07-17-58-25.png" style="width: 100%">
 
-**You're stranded in the desert, close to dying of starvation and thirst. You must escape, but there's so much cacti in the way. There's only one way around them: jumping. Obstacle Jump is a video game made in Kaboom.js with Minecraft textures where you must jump over cacti to gain points.** 
+**You're stranded in the desert, close to dying of starvation and thirst. You must escape, but there's so much cacti in the way. There's only one way around them: jumping. Cacti Run is a video game made in Kaboom.js where you jump over cacti to gain points.** 
 
 # Features
 
@@ -28,6 +28,11 @@ Movement of the player forward is accomplished by scrolling. You are not actuall
 
 # Changelog
 
+## 9th April 2023
+
+* Now known as "Cacti Run"
+* Shrink player
+
 ## 7th April 2023
 
 * Complete rewrite of backend
@@ -38,7 +43,7 @@ Movement of the player forward is accomplished by scrolling. You are not actuall
 
 ## 6th April 2023
 
-* Account login/registration system based on my other project, <a href="https://github.com/chascharlie/node-login-new">node-login-new</a>
+* Account login/registration system
 * No longer available on GitHub pages due to use of Node.js
 
 ## 3rd April 2023

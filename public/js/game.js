@@ -17,12 +17,12 @@ loadRoot("https://i.ibb.co/")  // Set the root URL for all asset loading
 loadSprite("floor", "DKK28Xh/sand.png")  // Load the floor sprite
 loadSprite("obstacle", "f9HPp8H/cactus.png")
 loadSprite("sun", "r3J0fH4/sun.png")
-loadSpriteAtlas("mCjLYRH/player.png", {
+loadSpriteAtlas("WG888nd/player.png", {
     player: {
         x: 0,
         y: 0,
-        width: 280,
-        height: 99,
+        width: 226,
+        height: 80,
         sliceX: 4,
         sliceY: 1,
         anims: {
@@ -86,14 +86,14 @@ scene("title", () => {
     
     // Display game title
     add([
-        text("Obstacle Jump", {
-            size: 50,
+        text("Cacti Run", {
+            size: 60,
             font: "VT323"
         }),
         area(),
         origin("center"),
         pos(center().x, 40),
-        color(255, 255, 255)
+        color(103, 139, 128)
     ])
 
     // Create play button
