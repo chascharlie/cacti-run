@@ -296,6 +296,7 @@ scene("main", () => {
 
     player.collides("obstacle", () => { // When the player collides with an obstacle
         shake(10) // Mildly shake screen
+
         setTimeout(() => {
             go("game-over", score.value)
         }, 500) // Wait for 500 milliseconds before going to game over screen
@@ -304,6 +305,17 @@ scene("main", () => {
 
 // Game Over scene taking in score as parameter
 scene("game-over", (score) => {
+    if (username !== "Guest") { // If player signed in
+        // Send POST request to /score, including username and score
+        $.post({
+            url: "/score",
+            data: {
+                username: username,
+                score: score
+            }
+        })
+    }
+
     addLevel(map, config)
 
     add([

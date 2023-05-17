@@ -3,6 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const account = require('./lib/account')
+const leaderboard = require('./lib/leaderboard')
 
 const app = express() // Create Express app
 app.use(bodyParser.urlencoded({ extended: true })) // Use middleware to parse request body
@@ -37,7 +38,7 @@ app.get('/', (req, res) => {
                 <head lang="en">
                     <meta charset="utf-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Obstacle Jump</title>
+                    <title>Cacti Run</title>
                 </head>
                 <body>
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -53,6 +54,34 @@ app.get('/', (req, res) => {
             setTimeout(waitForUsername, 10) // Wait for 10 milliseconds and check again
         }
     })()
+})
+
+// POST route for /score
+app.post('/score', (req, res) => {
+    // Obtain details from request body
+    const username = req.body.username
+    const score = req.body.score
+
+    // Call getPlayerRecord, passing in the player's username
+    leaderboard.getPlayerRecord(username, (err, record) => {
+        // If no record was retrieved
+        if (!record && record !== 0) { 
+            res.status(err.code).send(err.msg)
+            return
+        }
+
+        if (score > record) { // Latest score is more than record
+            leaderboard.updateRecord(username, score, (err) => { // Update record with new score
+                if (err) {
+                    res.status(err.code).send(err.msg)
+                    return
+                }
+
+            })
+        }
+
+        res.end()
+    })
 })
 
 // POST route for /login
@@ -97,7 +126,7 @@ app.post('/logout', (req, res) => {
     // Call the logout function, passing in the session
     account.logout(session, () => {
         res.clearCookie("session") // Delete cookie
-        res.end('')
+        res.end()
     })
 })
 
