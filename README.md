@@ -28,6 +28,10 @@ Movement of the player forward is accomplished by scrolling. You are not actuall
 
 # Changelog
 
+## 17th May 2023
+
+* Best scores are now recorded in SQLite database
+
 ## 9th April 2023
 
 * Now known as "Cacti Run"
